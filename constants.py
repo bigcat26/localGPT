@@ -38,7 +38,7 @@ DOCUMENT_MAP = {
 }
 
 # Default Instructor Model
-EMBEDDING_MODEL_NAME = "hkunlp/instructor-large" # Uses 1.5 GB of VRAM (High Accuracy with lower VRAM usage)
+# EMBEDDING_MODEL_NAME = "hkunlp/instructor-large" # Uses 1.5 GB of VRAM (High Accuracy with lower VRAM usage)
 
 ####
 #### OTHER EMBEDDING MODEL OPTIONS
@@ -48,6 +48,7 @@ EMBEDDING_MODEL_NAME = "hkunlp/instructor-large" # Uses 1.5 GB of VRAM (High Acc
 # EMBEDDING_MODEL_NAME = "intfloat/e5-large-v2" # Uses 1.5 GB of VRAM (A little less accurate than instructor-large)
 # EMBEDDING_MODEL_NAME = "intfloat/e5-base-v2" # Uses 0.5 GB of VRAM (A good model for lower VRAM GPUs)
 # EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2" # Uses 0.2 GB of VRAM (Less accurate but fastest - only requires 150mb of vram)
+EMBEDDING_MODEL_NAME = "shibing624/text2vec-base-chinese"
 
 ####
 #### MULTILINGUAL EMBEDDING MODELS
@@ -70,8 +71,11 @@ EMBEDDING_MODEL_NAME = "hkunlp/instructor-large" # Uses 1.5 GB of VRAM (High Acc
 ####    32b        130 GB       65 GB       32.5 GB - 35 GB    16.25 GB - 19 GB  
 ####    65b        260.8 GB     130.4 GB    65.2 GB - 67 GB    32.6 GB -  - 35 GB  
 
-MODEL_ID = "TheBloke/Llama-2-7B-Chat-GGML"
-MODEL_BASENAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
+# MODEL_ID = "TheBloke/Llama-2-7B-Chat-GGML"
+# MODEL_BASENAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
+
+MODEL_ID = "F:\\text-generation-webui\\models\\vicuna-13B-1.1-Chinese-GPTQ-4bit-128g"
+MODEL_BASENAME = "vicuna-13B-1.1-Chinese-GPTQ-4bit-128g.safetensors"
 
 ####
 #### (FOR HF MODELS)
