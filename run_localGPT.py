@@ -2,7 +2,7 @@ import logging
 
 import click
 import torch
-from auto_gptq import AutoGPTQForCausalLM
+from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
 from huggingface_hub import hf_hub_download
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceInstructEmbeddings
@@ -74,14 +74,24 @@ def load_model(device_type, model_id, model_basename=None):
             tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
             logging.info("Tokenizer loaded")
 
+            # quantization_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16)
+            quantize_config = BaseQuantizeConfig(
+                bits=4,  # quantize model to 4-bit
+                group_size=128,  # it is recommended to set the value to 128
+                desc_act=False,  # set to False can significantly speed up inference but the perplexity may slightly bad
+            )
+            
             model = AutoGPTQForCausalLM.from_quantized(
                 model_id,
                 model_basename=model_basename,
+                torch_dtype=torch.bfloat16,
+                # load_in_8bit=True,
+                # low_cpu_mem_usage=True,
                 use_safetensors=True,
                 trust_remote_code=True,
                 device="cuda:0",
                 use_triton=False,
-                quantize_config=None,
+                quantize_config=quantize_config,
             )
     elif (
         device_type.lower() == "cuda"
@@ -94,7 +104,8 @@ def load_model(device_type, model_id, model_basename=None):
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             device_map="auto",
-            torch_dtype=torch.float16,
+            torch_dtype=torch.bfloat16,
+            load_in_8bit=True,
             low_cpu_mem_usage=True,
             trust_remote_code=True,
             # max_memory={0: "15GB"} # Uncomment this line with you encounter CUDA out of memory errors
@@ -201,7 +212,7 @@ def main(device_type, show_sources):
 
     {history}
     Question: {question}
-    Helpful Answer:"""
+    Answer:"""
 
     prompt = PromptTemplate(input_variables=["history", "context", "question"], template=template)
     memory = ConversationBufferMemory(input_key="question", memory_key="history")
