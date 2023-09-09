@@ -7,7 +7,7 @@ from huggingface_hub import hf_hub_download
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.llms import HuggingFacePipeline, LlamaCpp
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory, ConversationBufferWindowMemory
 from langchain.prompts import PromptTemplate
 
 # from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -216,6 +216,7 @@ def main(device_type, show_sources):
 
     prompt = PromptTemplate(input_variables=["history", "context", "question"], template=template)
     memory = ConversationBufferMemory(input_key="question", memory_key="history")
+    memory = ConversationBufferWindowMemory(input_key="question", memory_key="history", k=3)
 
     llm = load_model(device_type, model_id=MODEL_ID, model_basename=MODEL_BASENAME)
 
